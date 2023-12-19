@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+/.vs/Advent of Code 2023
+/x64/Debug
+*.sln
+*.vcxproj
+*.filters
+*.user
