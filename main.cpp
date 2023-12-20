@@ -80,11 +80,95 @@ void day1p2()
 	std::cout << calibration_sum << std::endl;
 }
 
+struct rgb_count
+{
+	bool over_max()
+	{
+		return (r > 12 || g > 13 || b > 14);
+	}
+
+	rgb_count(std::string line)
+	{
+		for (int i = 0; i < strs.size(); i++)
+		{
+			std::string s = strs[i];
+			std::size_t found = line.find(s);
+
+			while (found != std::string::npos)
+			{
+				if (s == "red") r += std::stoi(line.substr(found -3, found-1));
+				if (s == "green") g += std::stoi(line.substr(found - 3, found-1));
+				if (s == "blue") b += std::stoi(line.substr(found - 3, found-1));
+				line = line.replace(line.find(s), s.length(), "");
+				found = line.find(s);
+			}
+		}
+	}
+	int r = 0, g = 0, b = 0;
+	std::vector<std::string> strs = {
+		"red","green","blue" };
+};
+
+
+void day2p1()
+{
+	std::ifstream infile("day2input.txt");
+	std::string line;
+
+	int sum_of_possible_games_ids = 0;
+
+	while (std::getline(infile, line))
+	{
+
+		std::size_t find_colon = line.find(":");
+		int game_id = std::stoi(line.substr(4, find_colon));
+		bool over_rgb_count = false;
+		std::cout << "\n-------------------------------------";
+		std::cout << "\nID: " << game_id << std::endl;
+		
+		std::size_t find_semicolon = line.find(";");
+
+		std::string first_subset = line.substr(find_colon + 1, find_semicolon - (find_colon + 1));
+		std::cout << "\nsubset: " << first_subset;
+		rgb_count rgb(first_subset);
+		std::cout << "\nrgb: " << rgb.r << "," << rgb.g << "," << rgb.b;
+		std::cout << "\npossible: " << !rgb.over_max();
+		rgb.over_max() ? over_rgb_count = true : over_rgb_count = over_rgb_count;
+
+		while (find_semicolon != std::string::npos)
+		{
+			line = line.substr(find_semicolon + 1, line.length());
+			find_semicolon = line.find(";");
+
+			std::string subset = line.substr(0, find_semicolon);
+			std::cout << "\nsubset: " << subset;
+			rgb_count rgb(subset);
+			std::cout << "\nrgb: " << rgb.r << "," << rgb.g << "," << rgb.b;
+			std::cout << "\npossible: " << !rgb.over_max();
+			rgb.over_max() ? over_rgb_count = true : over_rgb_count = over_rgb_count;
+		}
+
+		if (!over_rgb_count)
+		{
+			sum_of_possible_games_ids += game_id;
+		}
+
+	}
+
+	std::cout << "\n" << sum_of_possible_games_ids;
+}
+
+void day2p2()
+{
+
+}
 
 int main() {
 
-	day1p1();
-	day1p2();
+	//day1p1();
+	//day1p2();
+	//day2p1();
+	day2p2();
 
 	return 0;
 }
